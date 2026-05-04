@@ -27,21 +27,21 @@ class Node:
 # ...
 
 # Then your functions.
+def parse_row(fields: list[str]) -> Row:
+    # Parses (and returns) a row from the given CSV file.
+    return Row(
+        country=fields[0],
+        year=int(fields[1]),
+        electricity_and_heat_co2_emissions=None if fields[2] == "" else float(fields[2]),
+        electricity_and_heat_co2_emissions_per_capita=None if fields[3] == "" else float(fields[3]),
+        energy_co2_emissions=None if fields[4] == "" else float(fields[4]),
+        energy_co2_emissions_per_capita=None if fields[5] == "" else float(fields[5]),
+        total_co2_emissions_excluding_lucf=None if fields[6] == "" else float(fields[6]),
+        total_co2_emissions_excluding_lucf_per_capita=None if fields[7] == "" else float(fields[7]),
+    )
+
 def read_csv_lines(filename: str) -> Optional[Node]:
     # Reads a CSV file and recursively builds a linked list of Rows.
-
-    def parse_row(fields: list[str]) -> Row:
-        # Parses (and returns) a row from the given CSV file.
-        return Row(
-            country=fields[0],
-            year=int(fields[1]),
-            electricity_and_heat_co2_emissions=None if fields[2] == "" else float(fields[2]),
-            electricity_and_heat_co2_emissions_per_capita=None if fields[3] == "" else float(fields[3]),
-            energy_co2_emissions=None if fields[4] == "" else float(fields[4]),
-            energy_co2_emissions_per_capita=None if fields[5] == "" else float(fields[5]),
-            total_co2_emissions_excluding_lucf=None if fields[6] == "" else float(fields[6]),
-            total_co2_emissions_excluding_lucf_per_capita=None if fields[7] == "" else float(fields[7]),
-        )
 
     with open(filename, newline="") as csvfile:
         reader = csv.reader(csvfile)
@@ -69,9 +69,20 @@ def read_csv_lines(filename: str) -> Optional[Node]:
 
 
 def listlen(data: Optional[Node]) -> int:
-    # Returns the number of rows in the passed linked list.
+    # Recursively counts and returns the number of rows in the passed linked list.
     if data is None:
         return 0
     return 1 + listlen(data.next)
+
+
+def filter_rows(
+        data: Optional[Node],
+        field_name: str,
+        comparison: str,
+        value: Union[str, float, int]
+) -> Optional[Node]:
+    # Recursively filters a given linked list, given a query.
+
+    
 
 # ...
