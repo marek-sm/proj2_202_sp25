@@ -5,25 +5,67 @@ from typing import *
 from dataclasses import dataclass
 import math
 
+sys.setrecursionlimit(10_000)
+
 
 # Put your data definitions first!
 @dataclass(frozen=True)
 class Row:
     country: str
     year: int
-    electricity_and_heat_co2_emissions: float | None
-    electricity_and_heat_co2_emissions_per_capita: float | None
-    energy_co2_emissions: float | None
-    energy_co2_emissions_per_capita: float | None
-    total_co2_emissions_excluding_lucf: float | None
-    total_co2_emissions_excluding_lucf_per_capita: float | None
+    electricity_and_heat_co2_emissions: Optional[float]
+    electricity_and_heat_co2_emissions_per_capita: Optional[float]
+    energy_co2_emissions: Optional[float]
+    energy_co2_emissions_per_capita: Optional[float]
+    total_co2_emissions_excluding_lucf: Optional[float]
+    total_co2_emissions_excluding_lucf_per_capita: Optional[float]
 
 @dataclass(frozen=True)
 class Node:
     value: Row
-    next: Node | None
+    next: Optional[Node]
 # ...
 
 # Then your functions.
+def read_csv_lines(filename: str) -> Optional[Node]:
+    # Reads a CSV file and recursively builds a linked list of Rows.
+
+    def parse_row(fields: list[str]) -> Row:
+        # Parses (and returns) a row from the given CSV file.
+        return Row(
+            country=fields[0],
+            year=int(fields[1]),
+            electricity_and_heat_co2_emissions=None if fields[2] == "" else float(fields[2]),
+            electricity_and_heat_co2_emissions_per_capita=None if fields[3] == "" else float(fields[3]),
+            energy_co2_emissions=None if fields[4] == "" else float(fields[4]),
+            energy_co2_emissions_per_capita=None if fields[5] == "" else float(fields[5]),
+            total_co2_emissions_excluding_lucf=None if fields[6] == "" else float(fields[6]),
+            total_co2_emissions_excluding_lucf_per_capita=None if fields[7] == "" else float(fields[7]),
+        )
+
+    with open(filename, newline="") as csvfile:
+        reader = csv.reader(csvfile)
+        header = next(reader)
+        if header != [
+            "country",
+            "year",
+            "electricity_and_heat_co2_emissions",
+            "electricity_and_heat_co2_emissions_per_capita",
+            "energy_co2_emissions",
+            "energy_co2_emissions_per_capita",
+            "total_co2_emissions_excluding_lucf",
+            "total_co2_emissions_excluding_lucf_per_capita",
+        ]:
+            raise ValueError(f"Invalid header: {header}")
+        rows = list(reader)
+
+    def build(i: int) -> Optional[Node]:
+        # Constructs the linked list of Rows from the given CSV file, starting at index i.
+        if i == len(rows):
+            return None
+        return Node(parse_row(rows[i]), build(i+1))
+    
+    return build(0)
+
 
 # ...
