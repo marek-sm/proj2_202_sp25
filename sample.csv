@@ -1,0 +1,9 @@
+country,year,electricity_and_heat_co2_emissions,electricity_and_heat_co2_emissions_per_capita,energy_co2_emissions,energy_co2_emissions_per_capita,total_co2_emissions_excluding_lucf,total_co2_emissions_excluding_lucf_per_capita
+USA,1990,1800.5,7.2,4800.0,19.3,5100.0,20.5
+USA,2000,2300.1,8.1,5700.0,20.2,5900.0,20.9
+USA,2020,1550.0,4.7,4500.0,13.6,4700.0,14.2
+Mexico,1990,75.3,0.9,260.0,3.1,340.0,4.0
+Mexico,2020,150.2,1.2,460.0,3.6,540.0,4.2
+Andorra,2010,,,,,,
+Canada,2000,130.0,4.2,540.0,17.5,580.0,18.8
+Canada,2020,90.5,2.4,540.0,14.2,580.0,15.3
