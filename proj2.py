@@ -83,6 +83,25 @@ def filter_rows(
 ) -> Optional[Node]:
     # Recursively filters a given linked list, given a query.
 
+    def matches(r: Row) -> bool:
+        # Checks if a row fits the query requirements
+        field_value = getattr(r, field_name) # Automatically raises an AttributeError if field_name isn't a real attribute on the Row
+        if field_value is None:
+            return False
+        if field_name == "country" and comparison != "equal":
+            raise ValueError(f'Country field can only be "equal"')
+        if comparison == "equal":
+            return field_value == value
+        if comparison == "less_than":
+            return field_value < value
+        if comparison == "greater_than":
+            return field_value > value
+        raise ValueError("Not a valid comparison")
     
-
+    if data is None:
+        return None
+    rest = filter_rows(data.next, field_name, comparison, value)
+    if matches(data.value):
+        return Node(data.value, rest)
+    return rest
 # ...
